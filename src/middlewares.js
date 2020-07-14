@@ -7,14 +7,19 @@ const User = require('./models/user')
 function checkAuthentication(req, res, next) {
 	console.log(req.header('Authorization'))
 	const token = req.header('Authorization') ? req.header('Authorization').replace('Bearer ', '') : ''
-    const data = jwt.verify(token, config.JwtSecret)
-	User.findOne({ _id: data._id, 'tokens.token': token })
-		.then(user => {
-        	req.user = user
-			req.token = token	
-			next()
-		})
-    	.catch(error => res.status(401).send({ error: 'Not authorized to access this resource' }))
+    const data = jwt.verify(token, config.JwtSecret, function(err, decoded) {
+		if (err) {
+			return res.status(401).send(err)
+		} else {
+			User.findOne({ _id: decoded._id, 'tokens.token': token })
+				.then(user => {
+					req.user = user
+					req.token = token	
+					next()
+				})
+				.catch(error => res.status(401).send({ error: 'Not authorized to access this resource' }))
+		}
+	});
 }
 
 function allowCrossDomain(req, res, next) {
