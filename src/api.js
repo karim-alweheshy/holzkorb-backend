@@ -27,5 +27,4 @@ api.use('/auth', auth)
 api.use('/products', product)
 api.use('/inventory', inventoryItem)
 
-
 module.exports = api
