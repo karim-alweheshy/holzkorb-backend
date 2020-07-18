@@ -3,6 +3,7 @@
 const jwt = require('jsonwebtoken')
 const config = require('./config')
 const User = require('./models/user')
+const Farmer = require('./models/farmer')
 
 function checkAuthentication(req, res, next) {
 	console.log(req.header('Authorization'))
@@ -15,6 +16,24 @@ function checkAuthentication(req, res, next) {
 				.then(user => {
 					req.user = user
 					req.token = token	
+					next()
+				})
+				.catch(error => res.status(401).send({ error: 'Not authorized to access this resource' }))
+		}
+	});
+}
+
+function checkFarmerAuthentication(req, res, next) {
+	console.log(req.header('Authorization'))
+	const token = req.header('Authorization') ? req.header('Authorization').replace('Bearer ', '') : ''
+	const data = jwt.verify(token, config.JwtSecret, function(err, decoded) {
+		if (err) {
+			return res.status(401).send(err)
+		} else {
+			Farmer.findOne({ _id: decoded._id, 'tokens.token': token })
+				.then(farmer => {
+					req.farmer = farmer
+					req.token = token
 					next()
 				})
 				.catch(error => res.status(401).send({ error: 'Not authorized to access this resource' }))
@@ -38,5 +57,6 @@ function allowCrossDomain(req, res, next) {
 
 module.exports = {
 	checkAuthentication,
+	checkFarmerAuthentication,
     allowCrossDomain
 }
