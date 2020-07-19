@@ -9,6 +9,7 @@ const middlewares = require('./middlewares')
 const auth = require('./routes/auth')
 const product = require('./routes/product')
 const inventoryItem = require('./routes/inventory-item')
+const farmer = require('./routes/farmer')
 
 const api = express()
 
@@ -26,5 +27,6 @@ api.get('/', (req, res) => {
 api.use('/auth', auth)
 api.use('/products', product)
 api.use('/inventory', inventoryItem)
+api.use('/farmer', farmer)
 
 module.exports = api
