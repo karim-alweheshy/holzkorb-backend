@@ -32,6 +32,15 @@ const userSchema = mongoose.Schema({
         type: Date,
         required: false
     },
+    profileImageUrl: {
+        type: String,
+        required: false,
+        // validate: value => {
+        //     if (!isURL(value)) {
+        //         throw new Error({error: 'Invalid image URL'})
+        //     }
+        // }
+    },
     password: {
         type: String,
         required: true,
@@ -84,6 +93,19 @@ userSchema.methods.generateAuthToken = async function () {
     user.tokens = user.tokens.concat({token})
     await user.save()
     return token
+}
+
+userSchema.methods.updateProfileImage = async function (url) {
+    const user = this
+    user.profileImageUrl = url
+    await user.save()
+}
+
+userSchema.methods.updateProfileInfo = async function (firstName, lastName) {
+    const user = this
+    user.firstName = firstName
+    user.lastName = lastName
+    await user.save()
 }
 
 userSchema.methods.addAddress = async function (address) {

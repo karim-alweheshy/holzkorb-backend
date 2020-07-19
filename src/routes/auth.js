@@ -12,5 +12,8 @@ router.post('/addAddress', middlewares.checkAuthentication, AuthController.addAd
 router.get('/me', middlewares.checkAuthentication, AuthController.me);
 router.delete('/logout', middlewares.checkAuthentication, AuthController.logout);
 router.delete('/logoutFromAllDevices', middlewares.checkAuthentication, AuthController.logoutFromAllDevices);
+router.post('/updateProfileImage', middlewares.checkAuthentication, AuthController.updateProfileImage);
+router.post('/updateProfileInfo', middlewares.checkAuthentication, AuthController.updateProfileInfo);
+
 
 module.exports = router;

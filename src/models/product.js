@@ -19,6 +19,9 @@ var ProductSchema = new mongoose.Schema({
 	ownerId: {
 		type: ObjectId,
 		required: true
+	},
+	imageUrl: {
+		type: String
 	}
 });
 

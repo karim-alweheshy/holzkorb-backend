@@ -1,6 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const ObjectId = require('mongodb').ObjectID;
 
 var InventroyItemSchema = new mongoose.Schema({
   startDate: {
@@ -31,6 +32,16 @@ var InventroyItemSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  ownerId: {
+    type: ObjectId,
+    required: true
+  },
+  imageUrl: {
+    type: String
+  },
+  name: {
+    type: String
+  }
 });
 
 module.exports = mongoose.model('InventroyItem', InventroyItemSchema);
