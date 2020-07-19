@@ -9,7 +9,9 @@ const create = (req, res) => {
 			message: 'The request body is empty'
 		});
 	} else {
-		ProductModel.create(req.body)
+		const product = req.body
+    	product.userId = req.user._id
+		ProductModel.create(product)
 			.then(product => res.status(201).json(product))
 			.catch(error => res.status(500).json({
 				error: 'Internal server error',
@@ -62,7 +64,8 @@ const remove = (req, res) => {
 }
 
 const list = (req, res) => {
-	ProductModel.find({ownerId: req.farmer._id}).exec()
+  ProductModel.find({ userId: req.user._id })
+		.exec()
 		.then(products => res.status(200).json(products))
 		.catch(error => res.status(500).json({
 			error: 'Internal server errror',

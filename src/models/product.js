@@ -18,6 +18,8 @@ var ProductSchema = new mongoose.Schema({
 	},
 	ownerId: {
 		type: ObjectId,
+	userId: {
+		type: String,
 		required: true
 	}
 });

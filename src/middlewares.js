@@ -6,7 +6,6 @@ const User = require('./models/user')
 const Farmer = require('./models/farmer')
 
 function checkAuthentication(req, res, next) {
-	console.log(req.header('Authorization'))
 	const token = req.header('Authorization') ? req.header('Authorization').replace('Bearer ', '') : ''
     const data = jwt.verify(token, config.JwtSecret, function(err, decoded) {
 		if (err) {
