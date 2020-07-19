@@ -1,6 +1,7 @@
 "use strict";
 
 const mongoose = require('mongoose');
+const ObjectId = require('mongodb').ObjectID;
 
 var ProductSchema = new mongoose.Schema({
 	name: {
@@ -15,6 +16,8 @@ var ProductSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
+	ownerId: {
+		type: ObjectId,
 	userId: {
 		type: String,
 		required: true
