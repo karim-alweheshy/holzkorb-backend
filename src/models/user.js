@@ -60,14 +60,6 @@ const userSchema = mongoose.Schema({
             required: false
         }
     }],
-    inventoryItemsId: [{
-        type: String,
-        required: false
-    }],
-    productsId: [{
-        type: String,
-        required: false
-    }],
     tokens: [{
         token: {
             type: String,
