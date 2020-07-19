@@ -119,7 +119,7 @@ const list = (req, res) => {
 };
 
 const myList = (req, res) => {
-  InventoryItemModel.find({userId: req.user._id })
+  InventoryItemModel.find({ userId: req.user._id })
     .exec()
     .then((inventoryItems) => res.status(200).json(inventoryItems))
     .catch((error) =>

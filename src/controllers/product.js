@@ -64,7 +64,7 @@ const remove = (req, res) => {
 }
 
 const list = (req, res) => {
-	ProductModel.find({_id: { $in: req.user.productsId }})
+	ProductModel.find({ userId: req.user._id })
 		.exec()
 		.then(products => res.status(200).json(products))
 		.catch(error => res.status(500).json({
