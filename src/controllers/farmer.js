@@ -22,8 +22,18 @@ function update(req, res) {
         .catch(error => res.status(400).send(error))
 }
 
+function login(req, res) {
+    const {email, password} = req.body
+    console.log("login", email)
+    Farmer.findByCredentials(email, password)
+        .then(farmer => farmer.generateAuthToken())
+        .then(token => res.status(200).send({token}))
+        .catch(error => res.status(401).send(error))
+}
+
 module.exports = {
     register,
     me,
     update,
+    login,
 };

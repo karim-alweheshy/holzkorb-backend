@@ -31,6 +31,24 @@ function addAddress(req, res) {
         .catch(error => res.status(400).send(error))
 }
 
+function updateProfileImage(req, res) {
+    const {id, url} = req.body
+    console.log("id", id)
+    User.findById(req.user._id)
+        .then(user => user.updateProfileImage(url))
+        .then(() => res.status(200).send())
+        .catch(error => res.status(401).send(error))
+}
+
+function updateProfileInfo(req, res) {
+    const {id, firstName, lastName} = req.body
+    User.findById(id)
+        .then(user => user.updateProfileInfo(firstName, lastName))
+        .then(() => res.status(200).send())
+        .catch(error =>res.status(400).send(error))
+
+}
+
 function logout(req, res) {
     req.user.tokens = req.user.tokens.filter((token) => {
         return token.token != req.token
@@ -54,5 +72,7 @@ module.exports = {
     me,
     addAddress,
     logout,
-    logoutFromAllDevices
+    logoutFromAllDevices,
+    updateProfileImage,
+    updateProfileInfo
 }
