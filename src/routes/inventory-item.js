@@ -6,7 +6,8 @@ const router = express.Router();
 const middlewares = require('../middlewares');
 const InventoryItemController = require('../controllers/inventory-item');
 
-router.get('/', InventoryItemController.list);
+router.get('/', middlewares.checkAuthentication, InventoryItemController.myList);
+router.get('/all', InventoryItemController.list);
 router.post('/', middlewares.checkAuthentication, InventoryItemController.create);
 router.get('/:id', InventoryItemController.read);
 router.put('/:id', middlewares.checkAuthentication, InventoryItemController.update);

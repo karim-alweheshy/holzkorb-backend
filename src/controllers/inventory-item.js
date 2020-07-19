@@ -1,6 +1,7 @@
 'use strict';
 
 const InventoryItemModel = require('../models/inventory-item');
+const ProductModel = require('../models/product');
 
 const create = (req, res) => {
   console.log(req);
@@ -83,6 +84,38 @@ const remove = (req, res) => {
 const list = (req, res) => {
   InventoryItemModel.find({})
     .exec()
+    .then(function(inventoryItems) {
+      if (!inventoryItems.length) {
+          return res.status(200).json([])
+      }
+      const productIds = inventoryItems.map(item => item.productId);
+      ProductModel.find({ _id: { $in: productIds } })
+        .exec()
+        .then(function(products) {
+          const result = inventoryItems.map(function(inventoryItem) {
+            const [assignedProduct] = products.filter(product => product._id == inventoryItem.productId)
+            return { inventoryItem, 'product': assignedProduct }
+          });
+          res.status(200).json(result)
+        })
+        .catch((error) =>
+          res.status(500).json({
+            error: 'Internal server errror',
+            message: error.message,
+          })
+        );
+    })
+    .catch((error) =>
+      res.status(500).json({
+        error: 'Internal server errror',
+        message: error.message,
+      })
+    );
+};
+
+const myList = (req, res) => {
+  InventoryItemModel.find({_id: { $in: req.user.inventoryItemsId }})
+    .exec()
     .then((inventoryItems) => res.status(200).json(inventoryItems))
     .catch((error) =>
       res.status(500).json({
@@ -92,10 +125,11 @@ const list = (req, res) => {
     );
 };
 
-module.exports = {
+module.exports = {  
   create,
   read,
   update,
   remove,
   list,
+  myList
 };
