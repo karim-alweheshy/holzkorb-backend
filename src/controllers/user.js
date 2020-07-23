@@ -24,7 +24,8 @@ function me(req, res) {
 }
 
 function addAddress(req, res) {
-    const {id, address} = req.body
+    const id = req.user._id
+    const {address} = req.body
     User.findById(id)
         .then(user => user.addAddress(address))
         .then(() => res.status(200).send())
@@ -41,7 +42,8 @@ function updateProfileImage(req, res) {
 }
 
 function updateProfileInfo(req, res) {
-    const {id, firstName, lastName} = req.body
+    const id = req.user._id
+    const {firstName, lastName} = req.body
     User.findById(id)
         .then(user => user.updateProfileInfo(firstName, lastName))
         .then(() => res.status(200).send())

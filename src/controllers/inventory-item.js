@@ -2,6 +2,7 @@
 
 const InventoryItemModel = require('../models/inventory-item');
 const ProductModel = require('../models/product');
+const FarmerModel = require('../models/farmer')
 const UserModel = require('../models/user');
 
 const create = (req, res) => {
@@ -12,8 +13,9 @@ const create = (req, res) => {
       message: 'The request body is empty',
     });
   } else {
+      console.log(req.farmer)
     const inventoryItem = req.body
-    inventoryItem.userId = req.user._id
+    inventoryItem.userId = req.farmer._id
     InventoryItemModel.create(inventoryItem)
       .then(function(inventoryItem) {
         res.status(201).json(inventoryItem) 
@@ -88,38 +90,46 @@ const remove = (req, res) => {
 
 const list = (req, res) => {
   InventoryItemModel.find({})
-    .exec()
-    .then(function(inventoryItems) {
-      if (!inventoryItems.length) {
-          return res.status(200).json([])
-      }
-      const productIds = inventoryItems.map(item => item.productId);
-      ProductModel.find({ _id: { $in: productIds } })
-        .exec()
-        .then(function(products) {
-          const result = inventoryItems.map(function(inventoryItem) {
-            const [assignedProduct] = products.filter(product => product._id == inventoryItem.productId)
-            return { inventoryItem, 'product': assignedProduct }
-          });
-          res.status(200).json(result)
-        })
-        .catch((error) =>
+      .exec()
+      .then((inventoryItems) => res.status(200).json(inventoryItems))
+      .catch((error) =>
           res.status(500).json({
-            error: 'Internal server errror',
-            message: error.message,
+              error: 'Internal server errror',
+              message: error.message,
           })
-        );
-    })
-    .catch((error) =>
-      res.status(500).json({
-        error: 'Internal server errror',
-        message: error.message,
-      })
-    );
+      )
+    // .exec()
+    // .then(function(inventoryItems) {
+    //   if (!inventoryItems.length) {
+    //       return res.status(200).json([])
+    //   }
+    //   const productIds = inventoryItems.map(item => item.productId);
+    //   ProductModel.find({ _id: { $in: productIds } })
+    //     .exec()
+    //     .then(function(products) {
+    //       const result = inventoryItems.map(function(inventoryItem) {
+    //         const [assignedProduct] = products.filter(product => product._id == inventoryItem.productId)
+    //         return { inventoryItem, 'product': assignedProduct }
+    //       });
+    //       res.status(200).json(result)
+    //     })
+    //     .catch((error) =>
+    //       res.status(500).json({
+    //         error: 'Internal server errror',
+    //         message: error.message,
+    //       })
+    //     );
+    // })
+    // .catch((error) =>
+    //   res.status(500).json({
+    //     error: 'Internal server errror',
+    //     message: error.message,
+    //   })
+    // );
 };
 
 const myList = (req, res) => {
-  InventoryItemModel.find({ userId: req.user._id })
+  InventoryItemModel.find({ userId: req.farmer._id })
     .exec()
     .then((inventoryItems) => res.status(200).json(inventoryItems))
     .catch((error) =>

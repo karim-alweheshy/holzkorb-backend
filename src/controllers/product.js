@@ -10,7 +10,7 @@ const create = (req, res) => {
 		});
 	} else {
 		const product = req.body
-    	product.userId = req.user._id
+    	product.userId = req.farmer._id
 		ProductModel.create(product)
 			.then(product => res.status(201).json(product))
 			.catch(error => res.status(500).json({
@@ -64,7 +64,7 @@ const remove = (req, res) => {
 }
 
 const list = (req, res) => {
-	ProductModel.find({ userId: req.user._id })
+	ProductModel.find({ userId: req.farmer._id })
 		.exec()
 		.then(products => res.status(200).json(products))
 		.catch(error => res.status(500).json({
